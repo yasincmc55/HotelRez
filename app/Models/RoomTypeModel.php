@@ -7,8 +7,6 @@ class RoomTypeModel extends Model{
     protected $table = 'room_types';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'name',
-        'description',
         'max_occupancy',
         'price_per_night',
         'status',

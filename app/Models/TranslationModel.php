@@ -8,34 +8,53 @@ class TranslationModel extends Model
 {
     protected $table = 'translations';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['translatable_id', 'translatable_type', 'language_code', 'field_name', 'translation'];
+    protected $allowedFields = ['translatable_id', 'translatable_type', 'key', 'value', 'language_code'];
 
     // Belirli bir dil için bir kaydın çevirisini getirir
-    public function getTranslation($translatableId, $languageCode)
+    public function getTranslation($key, $languageCode)
     {
         return $this->where([
-                'translatable_id' => $translatableId,
-                'language_code' => $languageCode
-            ])->first();
+            'key' => $key,
+            'language_code' => $languageCode
+        ])->first();
     }
-    
-    // Çeviriyi güncelle veya ekle
-    public function saveTranslation($translatableId, $translatableType, $fieldName, $languageCode, $translation)
+
+    // Mevcut bir çeviri olup olmadığını kontrol eder
+    public function checkTranslation($translatableId, $translatableType, $key, $languageCode)
     {
-        $existingTranslation = $this->getTranslation($translatableId, $translatableType, $fieldName, $languageCode);
-        
+        return $this->where([
+            'translatable_id' => $translatableId,
+            'translatable_type' => $translatableType,
+            'key' => $key,
+            'language_code' => $languageCode
+        ])->first();
+    }
+
+    // Çeviriyi güncelle veya ekle
+    public function saveTranslation($translatableId, $translatableType, $key, $value, $languageCode)
+    {
+        // Mevcut bir çeviri kaydı olup olmadığını kontrol et
+        $existingTranslation = $this->checkTranslation($translatableId, $translatableType, $key, $languageCode);
+
         if ($existingTranslation) {
-            // Güncelleme
-            return $this->update($existingTranslation['id'], ['translation' => $translation]);
+            // Mevcut çeviriyi güncelle
+            return $this->updateTranslation($existingTranslation['id'], $value);
         } else {
-            // Yeni ekleme
+            // Yeni bir çeviri ekle
             return $this->insert([
                 'translatable_id' => $translatableId,
                 'translatable_type' => $translatableType,
-                'field_name' => $fieldName,
-                'language_code' => $languageCode,
-                'translation' => $translation
+                'key' => $key,
+                'value' => $value,
+                'language_code' => $languageCode
             ]);
         }
+    }
+
+    public function updateTranslation($id, $value)
+    {
+        return $this->update($id, [
+            'value' => $value
+        ]);
     }
 }

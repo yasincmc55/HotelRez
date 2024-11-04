@@ -17,6 +17,7 @@
       </div>
       <!-- /.container-fluid -->
    </section>
+
    <!-- Oda Tipi Ekle Modal -->
    <div class="modal fade" id="addRoomTypeModal" tabindex="-1" aria-labelledby="addRoomTypeModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -126,10 +127,10 @@
                            <?php foreach($room_types as $rm): ?>
                            <tr>
                               <td><?= $rm->id ?></td>
-                              <td><?= $rm->name ?></td>
-                              <td><?= $rm->description ?></td>
-                              <td><?= $rm->status ?></td>
-                              <td>
+                              <td><?= translate('room_type_title','tr') ?></td>
+                              <td><?= translate('room_type_description','tr') ?></td>
+                               <td> <?= $rm->status == 1 ? "Aktif" : "Pasif" ?> </td>
+                               <td>
                                  <!-- Düzenle ve Sil butonları eklenebilir -->
                                  <button class="duzenle btn btn-sm btn-warning" data-id="<?= $rm->id ?>" >Düzenle</button>
                                  <button class="btn btn-sm btn-danger">Sil</button>
@@ -194,76 +195,44 @@
    </div>
 </div>
 <script>
-   $(document).ready(function() {
-       // Kaydet butonuna tıklandığında
-       $('#saveRoomTypeBtn').on('click', function() {
-           // Form verilerini toplama
-           let data = {
-               type_name: $('#type_name_tr').val(),
-               max_occupancy: $('#max_occupancy').val(),
-               per_night_price: $('#per_night_price').val(),
-               status: $('#status').val(),
-               translations: {}
-           };
-   
-           // Her dil sekmesi içindeki verileri topla
-           $('.language-form').each(function() {
-               const languageCode = $(this).find('input[name="language_code[]"]').val();
-               const typeName = $(this).find('input[name="type_name[]"]').val();
-               const description = $(this).find('textarea[name="description[]"]').val();
-   
-               // Çeviri verilerini 'translations' nesnesine ekle
-               data.translations[languageCode] = {
-                   type_name: typeName,
-                   description: description
-               };
-           });
-   
-           // AJAX ile veri gönder
-           $.ajax({
-               url: '<?= base_url("/api/add/save_room_type"); ?>',
-               type: 'POST',
-               data: JSON.stringify(data),
-               contentType: 'application/json',
-               success: function(response) {
-                   $('#addRoomTypeModal').modal('hide');
-                   showToast('Oda tipi başarıyla kaydedildi.');
-               },
-               error: function(xhr, status, error) {
-                   console.log("AJAX Hatası:", status, error);
-                   showToast('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
-               }
-           });
-       });
-   
-       // Düzenleme modalı açıldığında veriyi çek
-       $('.duzenle').on('click', function() {
-           const id = $(this).data('id');
-           loadTranslationData(id);
-       });
-   
-       // Dil verilerini yükle (örneğin, açıklama kısmını seçili dilde doldurmak için)
-       function loadTranslationData(id) {
-           $.ajax({
-               url: '<?= base_url("/api/edit/room_type/") ?>' + id,
-               type: 'GET',
-               success: function(response) {
-                   $('#addRoomTypeModal').modal('show');
-                   $('#max_occupancy').val(response.max_occupancy);
-                   $('#per_night_price').val(response.per_night_price);
-                   $('#status').val(response.status);
-   
-                   // Her dil için çeviri verilerini doldur
-                   $.each(response.translations, function(languageCode, translation) {
-                       $('#type_name_' + languageCode).val(translation.type_name);
-                       $('#description_' + languageCode).val(translation.description);
-                   });
-               },
-               error: function(xhr, status, error) {
-                   console.error("Dil verisi yüklenirken hata:", status, error);
-               }
-           });
-       }
-   });
-   
+    $(document).ready(function() {
+        // Kaydet butonuna tıklandığında
+        $('#saveRoomTypeBtn').on('click', function() {
+            // Ortak alan verilerini toplama
+            let data = {
+                max_occupancy: $('#max_occupancy').val(),
+                per_night_price: $('#per_night_price').val(),
+                status: $('#status').val(),
+                translations: []
+            };
+
+            // Her dil sekmesi içindeki verileri topla
+            $('.language-form').each(function() {
+                const languageCode = $(this).find('input[name="language_code[]"]').val();
+                const typeName = $(this).find('input[name="type_name[]"]').val();
+                const description = $(this).find('textarea[name="description[]"]').val();
+
+                data.translations.push(
+                    { key: 'room_type_title', value: typeName, language_code: languageCode },
+                    { key: 'room_type_description', value: description, language_code: languageCode }
+                );
+            });
+
+            // AJAX ile veri gönder
+            $.ajax({
+                url: '<?= base_url("/api/add/save_room_type"); ?>',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function(response) {
+                    $('#addRoomTypeModal').modal('hide');
+                    showToast('Oda tipi başarıyla kaydedildi.');
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX Hatası:", status, error);
+                    showToast('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+                }
+            });
+        });
+    });
 </script>

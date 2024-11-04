@@ -39,37 +39,35 @@ class RoomsController extends BaseController
         echo view('admin/templates/sidebar');
         echo view('admin/templates/footer');
     }
-
     public function save_room_type()
     {
         $roomTypeModel = new RoomTypeModel();
-
         $translationModel = new TranslationModel();
 
         // Ana oda tipi verilerini al
         $data = [
-            'name' => $this->request->getJSON()->type_name,
             'max_occupancy' => $this->request->getJSON()->max_occupancy,
             'price_per_night' => $this->request->getJSON()->per_night_price,
             'status' => $this->request->getJSON()->status,
+            //'title'=>$this->request->getJSON()->translations[0]->value,
         ];
+
 
         // Oda tipi verisini kaydet
         if ($roomTypeModel->insert($data)) {
+            // Tek bir oda türü kaydı için ID alınıyor
             $roomTypeId = $roomTypeModel->insertID();
 
             // Çeviri verilerini işle
             $translations = $this->request->getJSON()->translations;
-            foreach ($translations as $languageCode => $fields) {
-                foreach ($fields as $fieldName => $translationText) {
-                    $translationModel->saveTranslation(
-                        $roomTypeId,
-                        'room_type',
-                        $fieldName,
-                        $languageCode,
-                        $translationText
-                    );
-                }
+
+            foreach ($translations as $translation) {
+                $key = $translation->key;
+                $value = $translation->value;
+                $lg_code = $translation->language_code;
+
+                // Çeviriyi kaydet
+                $translationModel->saveTranslation($roomTypeId, 'room_types', $key, $value, $lg_code);
             }
 
             return $this->response->setJSON([
@@ -83,7 +81,6 @@ class RoomsController extends BaseController
             ]);
         }
     }
-
 
 
     public function edit_room_type($id){
