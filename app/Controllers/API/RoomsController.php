@@ -20,6 +20,7 @@ class RoomsController extends BaseController
 
     }
 
+
 /*ODA TİPLERİ İŞLEMLERİ*/
 
     //oda tipleri listesi
