@@ -24,7 +24,7 @@ class RoomsController extends BaseController
 /*ODA TİPLERİ İŞLEMLERİ*/
 
     //oda tipleri listesi
-    public function room_types(){
+    public function room_types_show(){
 
         $model = new RoomTypeModel();
         $room_types = $model->asObject()->findAll();
@@ -40,6 +40,23 @@ class RoomsController extends BaseController
         echo view('admin/templates/sidebar');
         echo view('admin/templates/footer');
     }
+
+    public function room_types(){
+        $model = new RoomTypeModel();
+        $room_types = $model->asObject()->findAll();
+
+        $lang = new LanguageModel();
+        $languages = $lang->findAll();
+
+        return $this->response->setJSON([
+            'room_types'=>$room_types,
+            'languages'=>$languages
+        ]);
+        
+    }
+
+
+
     public function save_room_type()
     {
         $roomTypeModel = new RoomTypeModel();

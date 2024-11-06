@@ -45,13 +45,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= base_url('admin/rooms')?>" class="nav-link">
+                            <a href="<?= base_url('/api/admin/rooms')?>" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Oda Listesi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= base_url('admin/room-type')?>" class="nav-link">
+                            <a href="<?= base_url('/admin/room_type')?>" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Oda Kategorileri</p>
                             </a>

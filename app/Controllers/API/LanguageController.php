@@ -19,7 +19,6 @@ class LanguageController extends BaseController{
       ]);
     }
 
-
     if($lang->insert(['name'=>$name , 'code'=>$lang_code])){
       return $this->response->setJSON([
         'status'=>'success',

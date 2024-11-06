@@ -5,11 +5,35 @@ use App\Models\UserModel;
 
 class UserController extends BaseController{
     public function index(){
+       $user = new UserModel();
+       $users = $user->findAll();
+       $data['users'] = $users;
+
        echo view('admin/templates/head');
        echo view('admin/templates/header');
        echo view('admin/templates/sidebar');
-       echo view('admin/users');
+       echo view('admin/users',$data);
        echo view('admin/templates/footer');
+    }
+
+    public function user_list(){
+        $userModel = new UserModel();
+        $users = $userModel->findAll();
+         
+         $filtered_users = array_map(function($user){
+             return[
+                'username'=>$user['username'],
+                'email'=>$user['email'],
+                'first_name'=>$user['first_name'],
+                'last_name'=>$user['last_name'],
+                'phone'=>$user['phone'],
+                'role'=>$user['role']
+             ];
+         },$users);
+
+        return $this->response->setJSON([
+            'users'=>$filtered_users,
+        ]);
     }
 
     public function user_add()

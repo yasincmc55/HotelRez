@@ -29,7 +29,7 @@
 
               <div class="card-tools d-flex">
                 <button type="button" class="btn btn-primary mr-2" data-toggle="modal"
-                  data-target="#addRoomModal">Kullanıcı Ekle</button> <!-- Oda Ekle butonu -->
+                  data-target="#addRoomModal">Kullanıcı Ekle</button>
                 <div class="input-group input-group-sm" style="width: 150px;">
                   <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
@@ -46,28 +46,36 @@
               <table class="table table-head-fixed text-nowrap">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Reason</th>
+                    <th>Order</th>
+                    <th>Name-Surname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>183</td>
-                    <td>John Doe</td>
-                    <td>11-7-2014</td>
-                    <td><span class="tag tag-success">Approved</span></td>
-                    <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                  <?php foreach($users as $user): ?>
+                    <tr>
+                    <td>1</td>
+                    <td><?=$user['first_name']." ".$user['last_name'] ?></td>
+                    <td><?=$user['email']?></td>
+                    <td><?=$user['phone']?></td>
+                    <td><?=$user['role']?></td>
+                    <td>
+                      <!-- Edit button triggers a modal -->
+                      <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#editUserModal" data-id="<?= $user['id'] ?>">
+                        <i class="fas fa-edit"></i> Düzenle
+                      </button>
+                      <!-- Delete button sends a delete request -->
+                      <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(<?= $user['id'] ?>)">
+                        <i class="fas fa-trash"></i> Sil
+                      </button>
+                    </td>
                   </tr>
-                  <tr>
-                    <td>219</td>
-                    <td>Alexander Pierce</td>
-                    <td>11-7-2014</td>
-                    <td><span class="tag tag-warning">Pending</span></td>
-                    <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                  </tr>
+                  <?php endforeach; ?>
+
                 </tbody>
               </table>
             </div>
@@ -85,7 +93,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addRoomModalLabel">Oda Ekle</h5>
+              <h5 class="modal-title" id="addRoomModalLabel"> Ekle</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
