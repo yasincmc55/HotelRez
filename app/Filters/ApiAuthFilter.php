@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Filters;
 
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
 use App\Models\UserModel;
+use CodeIgniter\Config\Services;
 
 class ApiAuthFilter implements FilterInterface
 {
@@ -15,12 +15,13 @@ class ApiAuthFilter implements FilterInterface
 
         if (empty($token)) {
             return Services::response()
-                ->setJSON(['error' => 'Authorization token is missing'])
+                ->setJSON(['error' => 'Token verisi yok!'])
                 ->setStatusCode(401);
         }
 
         $userModel = new UserModel();
         $user = $userModel->where('token', $token)->first();
+
 
         if (!$user) {
             return Services::response()

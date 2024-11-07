@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\ApiAuthFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -24,6 +25,7 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'apiAuth'       => ApiAuthFilter::class,
     ];
 
     /**
@@ -69,5 +71,9 @@ class Filters extends BaseConfig
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'apiAuth'=>[
+            'before'=>['admin/*']
+        ],
+    ];
 }

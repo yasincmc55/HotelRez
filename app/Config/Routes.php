@@ -30,3 +30,9 @@ $routes->get('admin/room-type-list', 'Api\RoomsController::room_types_show'); //
 $routes->get('admin/room-type','Api\RoomsController::room_types');
 $routes->post('admin/save-room-type', 'Api\RoomsController::save_room_type');
 $routes->get('admin/edit-room-type/(:num)', 'Api\RoomsController::edit_room_type/$1');
+
+
+//--Giriş İşlemleri
+$routes->get('login','Api/AuthController::login');
+$routes->get('register','Api/AuthController::register');
+
