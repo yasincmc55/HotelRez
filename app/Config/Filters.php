@@ -73,7 +73,7 @@ class Filters extends BaseConfig
      */
     public array $filters = [
         'apiAuth'=>[
-            'before'=>['admin/*']
+            'before'=>['admin/']
         ],
     ];
 }

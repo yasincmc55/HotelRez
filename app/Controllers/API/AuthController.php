@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\UserModel;
@@ -9,6 +9,14 @@ use CodeIgniter\API\ResponseTrait;
 class AuthController extends ResourceController
 {
     use ResponseTrait;
+
+    public function index(){
+        echo view('admin/templates/head');
+        echo view('admin/templates/header');
+        echo view('admin/templates/sidebar');
+        echo view('admin/auth/login');
+        echo view('admin/templates/footer');
+    }
 
     // Kayıt İşlemi
     public function register()
@@ -26,6 +34,7 @@ class AuthController extends ResourceController
             return $this->fail($userModel->errors());
         }
     }
+
 
     // Giriş İşlemi
     public function login()
