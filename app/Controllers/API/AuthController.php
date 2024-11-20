@@ -11,11 +11,9 @@ class AuthController extends ResourceController
     use ResponseTrait;
 
     public function index(){
-        echo view('admin/templates/head');
-        echo view('admin/templates/header');
-        echo view('admin/templates/sidebar');
+
         echo view('admin/auth/login');
-        echo view('admin/templates/footer');
+        
     }
 
     // Kayıt İşlemi
@@ -50,7 +48,16 @@ class AuthController extends ResourceController
             return $this->failUnauthorized('Invalid credentials');
         }
 
-        return $this->respond(['status' => 'Login successful', 'token' => $user['token']]);
+            // Başarılı giriş durumunda token döndürme
+        return $this->respond([
+            'status' => 'success',
+            'message' => 'Login successful',
+            'token' => $user['token'],
+            'user' => [
+                'id' => $user['id'],
+                'username' => $user['username']
+            ]
+        ]);
     }
 
     // Profil İşlemi

@@ -15,7 +15,7 @@ $routes->get('admin', 'Admin\DashboardController::index');
 
 
 //API işlemleri
-$routes->get('admin/rooms', 'Api\RoomsController::index');
+$routes->get('admin/rooms', 'Api\RoomsController::room_list');
 
 //--Kullalnıcı işlemleri
 $routes->get('admin/user-list', 'Api\UserController::index');
